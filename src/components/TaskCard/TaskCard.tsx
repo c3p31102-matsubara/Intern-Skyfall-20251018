@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { TaskType } from '../../types';
 import * as S from './TaskCard.styles';
 
@@ -13,6 +13,19 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDetail, setEditedDetail] = useState(detail);
+  const [buttonDisabled, setButton] = useState(true);
+
+  useEffect(function () {
+    if (editedTitle.length == 0 || editedDetail.length == 0) {
+      setButton(true);
+    }
+    else if (editedTitle.length > 50 || editedDetail.length > 200) {
+      setButton(true);
+    }
+    else if (editedTitle.length > 0 || editedDetail.length > 0) {
+      setButton(false);
+    }
+  }, [editedTitle, editedDetail]);
 
   // 編集ボタン押下時の処理
   const onClickEditButton = () => {
@@ -63,7 +76,7 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
           />
           <br />
           <div style={S.editActions}>
-            <button style={S.primaryBtn(false)} type='submit'>
+            <button style={S.primaryBtn(buttonDisabled)} disabled={buttonDisabled} type='submit'>
               更新
             </button>
             <button style={S.pillBtn} onClick={onClickCancelButton} type='button'>
