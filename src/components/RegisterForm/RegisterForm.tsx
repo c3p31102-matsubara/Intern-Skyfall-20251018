@@ -9,13 +9,18 @@ type Props = {
 export const RegisterForm = (props: Props) => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
-  // const [button, setButton]´
-  
-  
-  useEffect(() => {
-    // if (title.length => 50)
-    if (title.length > 5 && detail.length > 5) {
-      console.log("allow")
+  // const [button, setButton]
+
+
+  useEffect(function () {
+    if (title.length == 0 || detail.length == 0) {
+      console.log("no");
+    }
+    else if (title.length > 10 || detail.length > 10) {
+      console.log("no");
+    }
+    else if (title.length > 5 || detail.length > 5) {
+      console.log("allow");
     }
   }, [title, detail]);
   /**
