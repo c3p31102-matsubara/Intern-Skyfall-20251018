@@ -39,14 +39,15 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
     setIsEditing(false);
   };
 
-  /**
-   * TODO：削除の作成
-   */
   const onClickDeleteButton = () => {
-    // ここに削除ボタン押下時の処理
+    const newTaskList = taskList.filter((task) => {
+      if (task.id != id) {
+        return task;
+      }
+    })
+    setTaskList([...newTaskList]);
   };
-
-  // TODO：編集の作成
+  
   const onSubmitEditForm = (e: React.FormEvent) => {
     e.preventDefault();
     const newTaskList = taskList.map((task) => {
