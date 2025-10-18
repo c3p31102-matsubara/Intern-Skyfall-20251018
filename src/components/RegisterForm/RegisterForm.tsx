@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { actions, formCard, input, primaryBtn, textarea } from './RegisterForm.styles';
 import type { TaskType } from '../../types';
-
+import { loadLocalStorage } from "../../util";
 type Props = {
   setTaskList: React.Dispatch<React.SetStateAction<TaskType[]>>;
 };
@@ -52,17 +52,12 @@ export const RegisterForm = (props: Props) => {
   const onSubmitForm = (e: React.FormEvent) => {
     e.preventDefault();
     // ここに追加ボタン押下時の処理を書く
-    props.setTaskList((prev) => {
-      return [
-        ...prev,
-        {
-          id: Math.random(),
-          title: title,
-          detail: detail
-        }
-      ];
-    }
-    )
+    const newId = Math.random();
+    const newTask: TaskType = { id: newId, title: title, detail: detail }
+    const prev = loadLocalStorage();
+    prev.push(newTask);
+    localStorage.setItem(`tasklist`, JSON.stringify(prev));
+    props.setTaskList(prev);
   };
 
   return (
