@@ -6,16 +6,12 @@ import type { TaskType } from '../../types';
 import { homeStyle, mainStyle } from './Home.styles';
 
 export const Home = () => {
-  const [taskList, setTaskList] = useState<TaskType[]>([
-    { id: 1, title: 'タイトル1', detail: '詳細1' },
-    { id: 2, title: 'タイトル2', detail: '詳細2' },
-    { id: 3, title: 'タイトル3', detail: '詳細3' },
-  ]);
+  const [taskList, setTaskList] = useState<TaskType[]>([]);
 
   return (
     <div style={homeStyle}>
       <main style={mainStyle}>
-        <RegisterForm />
+        <RegisterForm setTaskList={setTaskList}/>
         <TaskList taskList={taskList} />
       </main>
     </div>
