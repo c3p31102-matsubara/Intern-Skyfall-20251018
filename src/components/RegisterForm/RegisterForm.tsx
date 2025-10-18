@@ -15,31 +15,36 @@ export const RegisterForm = (props: Props) => {
 
 
   useEffect(function () {
+    const titleMaxLength = 50;
+    const titleMinLength = 0;
+    const detailMaxLength = 200;
+    const detailMinLength = 0;
+
     const noTitle = title.length == 0;
     const noDetail = detail.length == 0;
-    const longTitle = title.length > 50;
-    const longDetail = detail.length > 200;
-    const littleTitle = title.length > 0;
-    const littleDetail = detail.length > 0;
-    if (noTitle || noDetail) {
-      setButtonDisabled(true);
-      if (noTitle)
-        setErrorBodyTitle("入力してください");
-      if (noDetail)
-        setErrorBodyDetail("入力してください");
-    }
-    else if (longTitle || longDetail) {
-      setButtonDisabled(true);
-      if (longTitle)
-        setErrorBodyTitle("テキストが長すぎます");
-      if (longDetail)
-        setErrorBodyDetail("テキストが長すぎます");
-    }
-    else if (littleTitle || littleDetail) {
-      setButtonDisabled(false);
-      setErrorBodyTitle("");
-      setErrorBodyDetail("");
-    }
+    const longTitle = title.length > titleMaxLength;
+    const longDetail = detail.length > detailMaxLength;
+    const littleTitle = titleMinLength > title.length;
+    const littleDetail = detailMinLength > detail.length;
+    let errorBodyTitle = "";
+    let errorBodyDetail = "";
+
+    if (noTitle)
+      errorBodyTitle += "入力してください\n";
+    if (noDetail)
+      errorBodyDetail += "入力してください\n";
+    if (longTitle)
+      errorBodyTitle += `長すぎます(${titleMaxLength}文字以下)\n`;
+    if (longDetail)
+      errorBodyDetail += `長すぎます(${detailMaxLength}文字以下)\n`;
+    if (littleTitle)
+      errorBodyTitle += "短すぎます\n";
+    if (littleDetail)
+      errorBodyDetail += "短すぎます\n";
+
+    setButtonDisabled(noTitle || noDetail || longTitle || longDetail || littleTitle || littleDetail);
+    setErrorBodyTitle(errorBodyTitle);
+    setErrorBodyDetail(errorBodyDetail);
   }, [title, detail]);
   /**
    * TODO：新規登録の作成

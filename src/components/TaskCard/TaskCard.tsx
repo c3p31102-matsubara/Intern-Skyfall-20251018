@@ -18,31 +18,36 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
   const [errorBodyDetail, setErrorBodyDetail] = useState("");
 
   useEffect(function () {
+    const titleMaxLength = 50;
+    const titleMinLength = 0;
+    const detailMaxLength = 200;
+    const detailMinLength = 0;
+
     const noTitle = editedTitle.length == 0;
     const noDetail = editedDetail.length == 0;
-    const longTitle = editedTitle.length > 50;
-    const longDetail = editedDetail.length > 200;
-    const littleTitle = editedTitle.length > 0;
-    const littleDetail = editedDetail.length > 0;
-    if (noTitle || noDetail) {
-      setButtonDisabled(true);
-      if (noTitle)
-        setErrorBodyTitle("入力してください");
-      if (noDetail)
-        setErrorBodyDetail("入力してください");
-    }
-    else if (longTitle || longDetail) {
-      setButtonDisabled(true);
-      if (longTitle)
-        setErrorBodyTitle("テキストが長すぎます");
-      if (longDetail)
-        setErrorBodyDetail("テキストが長すぎます");
-    }
-    else if (littleTitle || littleDetail) {
-      setButtonDisabled(false);
-      setErrorBodyTitle("");
-      setErrorBodyDetail("");
-    }
+    const longTitle = editedTitle.length > titleMaxLength;
+    const longDetail = editedDetail.length > detailMaxLength;
+    const littleTitle = titleMinLength > editedTitle.length;
+    const littleDetail = detailMinLength > editedDetail.length;
+    let errorBodyTitle = "";
+    let errorBodyDetail = "";
+
+    if (noTitle)
+      errorBodyTitle += "入力してください\n";
+    if (noDetail)
+      errorBodyDetail += "入力してください\n";
+    if (longTitle)
+      errorBodyTitle += `長すぎます(${titleMaxLength}文字以下)\n`;
+    if (longDetail)
+      errorBodyDetail += `長すぎます(${detailMaxLength}文字以下)\n`;
+    if (littleTitle)
+      errorBodyTitle += "短すぎます\n";
+    if (littleDetail)
+      errorBodyDetail += "短すぎます\n";
+
+    setButtonDisabled(noTitle || noDetail || longTitle || longDetail || littleTitle || littleDetail);
+    setErrorBodyTitle(errorBodyTitle);
+    setErrorBodyDetail(errorBodyDetail);
   }, [editedTitle, editedDetail]);
 
   // 編集ボタン押下時の処理
