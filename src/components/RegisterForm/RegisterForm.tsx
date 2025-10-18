@@ -9,18 +9,18 @@ type Props = {
 export const RegisterForm = (props: Props) => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
-  // const [button, setButton]
+  const [buttonDisabled, setButton] = useState(true);
 
 
   useEffect(function () {
     if (title.length == 0 || detail.length == 0) {
-      console.log("no");
+      setButton(true);
     }
-    else if (title.length > 10 || detail.length > 10) {
-      console.log("no");
+    else if (title.length > 50 || detail.length > 200) {
+      setButton(true);
     }
-    else if (title.length > 5 || detail.length > 5) {
-      console.log("allow");
+    else if (title.length > 0 || detail.length > 0) {
+      setButton(false);
     }
   }, [title, detail]);
   /**
@@ -44,11 +44,11 @@ export const RegisterForm = (props: Props) => {
 
   return (
     <form style={formCard} onSubmit={(e) => onSubmitForm(e)}>
-      <input style={input} type='text' placeholder="タイトル" maxLength={10} required={true} value={title} onChange={(e) => setTitle(e.target.value)} />
+      <input style={input} type='text' placeholder="タイトル" required={true} value={title} onChange={(e) => setTitle(e.target.value)} />
       <br />
       <textarea style={textarea} required={true} placeholder="TODO" value={detail} onChange={(e) => setDetail(e.target.value)} rows={7}></textarea>
       <div style={actions}>
-        <button style={primaryBtn(false)} type='submit'>
+        <button style={primaryBtn(buttonDisabled)} disabled={buttonDisabled} type='submit'>
           追加
         </button>
       </div>
