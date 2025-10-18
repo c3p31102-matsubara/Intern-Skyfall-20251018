@@ -13,18 +13,41 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDetail, setEditedDetail] = useState(detail);
-  const [buttonDisabled, setButton] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [errorBodyTitle, setErrorBodyTitle] = useState("");
+  const [errorBodyDetail, setErrorBodyDetail] = useState("");
 
   useEffect(function () {
-    if (editedTitle.length == 0 || editedDetail.length == 0) {
-      setButton(true);
-    }
-    else if (editedTitle.length > 50 || editedDetail.length > 200) {
-      setButton(true);
-    }
-    else if (editedTitle.length > 0 || editedDetail.length > 0) {
-      setButton(false);
-    }
+    const titleMaxLength = 50;
+    const titleMinLength = 0;
+    const detailMaxLength = 200;
+    const detailMinLength = 0;
+
+    const noTitle = editedTitle.length == 0;
+    const noDetail = editedDetail.length == 0;
+    const longTitle = editedTitle.length > titleMaxLength;
+    const longDetail = editedDetail.length > detailMaxLength;
+    const littleTitle = titleMinLength > editedTitle.length;
+    const littleDetail = detailMinLength > editedDetail.length;
+    let errorBodyTitle = "";
+    let errorBodyDetail = "";
+
+    if (noTitle)
+      errorBodyTitle += "入力してください\n";
+    if (noDetail)
+      errorBodyDetail += "入力してください\n";
+    if (longTitle)
+      errorBodyTitle += `長すぎます(${titleMaxLength}文字以下)\n`;
+    if (longDetail)
+      errorBodyDetail += `長すぎます(${detailMaxLength}文字以下)\n`;
+    if (littleTitle)
+      errorBodyTitle += "短すぎます\n";
+    if (littleDetail)
+      errorBodyDetail += "短すぎます\n";
+
+    setButtonDisabled(noTitle || noDetail || longTitle || longDetail || littleTitle || littleDetail);
+    setErrorBodyTitle(errorBodyTitle);
+    setErrorBodyDetail(errorBodyDetail);
   }, [editedTitle, editedDetail]);
 
   // 編集ボタン押下時の処理
@@ -62,6 +85,7 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
       {isEditing ? (
         <form style={S.card} onSubmit={onSubmitEditForm}>
           <input style={S.editInput} required={true} placeholder='タイトル' value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+          <a>{buttonDisabled && errorBodyTitle}</a>
           <br />
           <textarea
             style={S.editTextarea}
@@ -72,6 +96,7 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
             rows={7}
           />
           <br />
+          <a>{buttonDisabled && errorBodyDetail}</a>
           <div style={S.editActions}>
             <button style={S.primaryBtn(buttonDisabled)} disabled={buttonDisabled} type='submit'>
               更新
