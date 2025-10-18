@@ -13,17 +13,35 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDetail, setEditedDetail] = useState(detail);
-  const [buttonDisabled, setButton] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [errorBodyTitle, setErrorBodyTitle] = useState("");
+  const [errorBodyDetail, setErrorBodyDetail] = useState("");
 
   useEffect(function () {
-    if (editedTitle.length == 0 || editedDetail.length == 0) {
-      setButton(true);
+    const noTitle = editedTitle.length == 0;
+    const noDetail = editedDetail.length == 0;
+    const longTitle = editedTitle.length > 50;
+    const longDetail = editedDetail.length > 200;
+    const littleTitle = editedTitle.length > 0;
+    const littleDetail = editedDetail.length > 0;
+    if (noTitle || noDetail) {
+      setButtonDisabled(true);
+      if (noTitle)
+        setErrorBodyTitle("入力してください");
+      if (noDetail)
+        setErrorBodyDetail("入力してください");
     }
-    else if (editedTitle.length > 50 || editedDetail.length > 200) {
-      setButton(true);
+    else if (longTitle || longDetail) {
+      setButtonDisabled(true);
+      if (longTitle)
+        setErrorBodyTitle("テキストが長すぎます");
+      if (longDetail)
+        setErrorBodyDetail("テキストが長すぎます");
     }
-    else if (editedTitle.length > 0 || editedDetail.length > 0) {
-      setButton(false);
+    else if (littleTitle || littleDetail) {
+      setButtonDisabled(false);
+      setErrorBodyTitle("");
+      setErrorBodyDetail("");
     }
   }, [editedTitle, editedDetail]);
 
@@ -65,6 +83,7 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
       {isEditing ? (
         <form style={S.card} onSubmit={onSubmitEditForm}>
           <input style={S.editInput} required={true} placeholder='タイトル' value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+          <a>{buttonDisabled && errorBodyTitle}</a>
           <br />
           <textarea
             style={S.editTextarea}
@@ -75,6 +94,7 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
             rows={7}
           />
           <br />
+          <a>{buttonDisabled && errorBodyDetail}</a>
           <div style={S.editActions}>
             <button style={S.primaryBtn(buttonDisabled)} disabled={buttonDisabled} type='submit'>
               更新

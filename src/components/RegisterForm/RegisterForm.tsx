@@ -9,18 +9,36 @@ type Props = {
 export const RegisterForm = (props: Props) => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
-  const [buttonDisabled, setButton] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [errorBodyTitle, setErrorBodyTitle] = useState("");
+  const [errorBodyDetail, setErrorBodyDetail] = useState("");
 
 
   useEffect(function () {
-    if (title.length == 0 || detail.length == 0) {
-      setButton(true);
+    const noTitle = title.length == 0;
+    const noDetail = detail.length == 0;
+    const longTitle = title.length > 50;
+    const longDetail = detail.length > 200;
+    const littleTitle = title.length > 0;
+    const littleDetail = detail.length > 0;
+    if (noTitle || noDetail) {
+      setButtonDisabled(true);
+      if (noTitle)
+        setErrorBodyTitle("入力してください");
+      if (noDetail)
+        setErrorBodyDetail("入力してください");
     }
-    else if (title.length > 50 || detail.length > 200) {
-      setButton(true);
+    else if (longTitle || longDetail) {
+      setButtonDisabled(true);
+      if (longTitle)
+        setErrorBodyTitle("テキストが長すぎます");
+      if (longDetail)
+        setErrorBodyDetail("テキストが長すぎます");
     }
-    else if (title.length > 0 || detail.length > 0) {
-      setButton(false);
+    else if (littleTitle || littleDetail) {
+      setButtonDisabled(false);
+      setErrorBodyTitle("");
+      setErrorBodyDetail("");
     }
   }, [title, detail]);
   /**
@@ -45,8 +63,10 @@ export const RegisterForm = (props: Props) => {
   return (
     <form style={formCard} onSubmit={(e) => onSubmitForm(e)}>
       <input style={input} type='text' placeholder="タイトル" required={true} value={title} onChange={(e) => setTitle(e.target.value)} />
+      <a>{buttonDisabled && errorBodyTitle}</a>
       <br />
       <textarea style={textarea} required={true} placeholder="TODO" value={detail} onChange={(e) => setDetail(e.target.value)} rows={7}></textarea>
+      <a>{buttonDisabled && errorBodyDetail}</a>
       <div style={actions}>
         <button style={primaryBtn(buttonDisabled)} disabled={buttonDisabled} type='submit'>
           追加
