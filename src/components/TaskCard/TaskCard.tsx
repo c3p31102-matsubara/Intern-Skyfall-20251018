@@ -40,12 +40,8 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
   };
 
   const onClickDeleteButton = () => {
-    const newTaskList = taskList.filter((task) => {
-      if (task.id != id) {
-        return task;
-      }
-    })
-    setTaskList([...newTaskList]);
+    const newTaskList = taskList.filter((task) => task.id != id)
+    setTaskList(newTaskList);
   };
   
   const onSubmitEditForm = (e: React.FormEvent) => {
