@@ -4,10 +4,12 @@ import * as S from './TaskCard.styles';
 
 type Props = {
   task: TaskType;
+  taskList: TaskType[];
+  setTaskList: React.Dispatch<React.SetStateAction<TaskType[]>>;
 };
 
-export const TaskCard = ({ task }: Props) => {
-  const { title, detail } = task;
+export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
+  const { id, title, detail } = task;
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedDetail, setEditedDetail] = useState(detail);
@@ -34,24 +36,34 @@ export const TaskCard = ({ task }: Props) => {
   // TODO：編集の作成
   const onSubmitEditForm = (e: React.FormEvent) => {
     e.preventDefault();
-    // ここに更新ボタン押下時の処理
+    const newTaskList = taskList.map((task) => {
+      if (task.id == id) {
+        task.title = editedTitle;
+        task.detail = editedDetail;
+      }
+      return task;
+    })
+    setTaskList([...newTaskList]);
+    setIsEditing(false);
   };
 
   return (
     <>
       {isEditing ? (
         <form style={S.card} onSubmit={onSubmitEditForm}>
-          <input style={S.editInput} value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+          <input style={S.editInput} required={true} placeholder='タイトル' value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
           <br />
           <textarea
             style={S.editTextarea}
             value={editedDetail}
+            required={true}
+            placeholder='TODOを入力'
             onChange={(e) => setEditedDetail(e.target.value)}
             rows={7}
           />
           <br />
           <div style={S.editActions}>
-            <button style={S.primaryBtn(true)} type='submit'>
+            <button style={S.primaryBtn(false)} type='submit'>
               更新
             </button>
             <button style={S.pillBtn} onClick={onClickCancelButton} type='button'>
