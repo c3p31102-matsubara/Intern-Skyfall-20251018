@@ -1,0 +1,33 @@
+/* 最小限のリセット＋フォント */
+html,
+body,
+#root {
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans JP', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+:where(button, input, textarea, select) {
+  font: inherit;
+}
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
