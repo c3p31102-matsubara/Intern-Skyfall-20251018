@@ -4,15 +4,16 @@ import { RegisterForm } from '../../components/RegisterForm/RegisterForm';
 import { TaskList } from '../../components/TaskList/TaskList';
 import type { TaskType } from '../../types';
 import { homeStyle, mainStyle } from './Home.styles';
+import { loadLocalStorage } from "../../util";
 
 export const Home = () => {
-  const [taskList, setTaskList] = useState<TaskType[]>([]);
+  const [taskList, setTaskList] = useState<TaskType[]>(loadLocalStorage());
 
   return (
     <div style={homeStyle}>
       <main style={mainStyle}>
-        <RegisterForm setTaskList={setTaskList}/>
-        <TaskList taskList={taskList} setTaskList={setTaskList}/>
+        <RegisterForm setTaskList={setTaskList} />
+        <TaskList taskList={taskList} setTaskList={setTaskList} />
       </main>
     </div>
   );

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import type { TaskType } from '../../types';
 import * as S from './TaskCard.styles';
+import { loadLocalStorage } from '../../util';
 
 type Props = {
   task: TaskType;
-  taskList: TaskType[];
   setTaskList: React.Dispatch<React.SetStateAction<TaskType[]>>;
 };
 
-export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
+export const TaskCard = ({ task, setTaskList }: Props) => {
   const { id, title, detail } = task;
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
@@ -69,14 +69,16 @@ export const TaskCard = ({ task, taskList, setTaskList }: Props) => {
   
   const onSubmitEditForm = (e: React.FormEvent) => {
     e.preventDefault();
-    const newTaskList = taskList.map((task) => {
+    let taskList = loadLocalStorage();
+    taskList = taskList.map((task) => {
       if (task.id == id) {
         task.title = editedTitle;
         task.detail = editedDetail;
       }
       return task;
     })
-    setTaskList([...newTaskList]);
+    localStorage.setItem("tasklist", JSON.stringify(taskList));
+    setTaskList(taskList);
     setIsEditing(false);
   };
 
